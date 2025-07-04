@@ -187,13 +187,6 @@ const OrderSuccess = () => {
                 Go to Products
               </Button>
             </Link>
-            <Button 
-              variant="outline" 
-              size="lg"
-              onClick={() => console.log('Order data:', order)}
-            >
-              Debug Order Data
-            </Button>
           </div>
           
           <p className="text-sm text-muted-foreground mt-6">
