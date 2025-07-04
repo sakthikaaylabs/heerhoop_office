@@ -12,6 +12,7 @@ export interface Product {
   featured?: boolean;
   rating?: number;
   reviews?: number;
+  createdAt?: string;
 }
 
 export interface CartItem {

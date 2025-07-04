@@ -62,7 +62,8 @@ export const products: Product[] = [
     tags: ['wireless', 'noise-cancelling', 'premium', 'bluetooth'],
     featured: true,
     rating: 4.8,
-    reviews: 256
+    reviews: 256,
+    createdAt: '2024-01-15'
   },
   {
     id: '2',
@@ -80,7 +81,8 @@ export const products: Product[] = [
     tags: ['watch', 'minimalist', 'leather', 'swiss'],
     featured: true,
     rating: 4.6,
-    reviews: 142
+    reviews: 142,
+    createdAt: '2024-01-20'
   },
   {
     id: '3',
@@ -100,7 +102,8 @@ export const products: Product[] = [
     tags: ['fitness', 'smart', 'gps', 'health'],
     featured: true,
     rating: 4.5,
-    reviews: 89
+    reviews: 89,
+    createdAt: '2024-01-10'
   },
   {
     id: '4',
@@ -117,7 +120,8 @@ export const products: Product[] = [
     category: 'Home & Garden',
     tags: ['ceramic', 'handmade', 'coffee', 'artisan'],
     rating: 4.7,
-    reviews: 73
+    reviews: 73,
+    createdAt: '2024-01-25'
   },
   {
     id: '5',
@@ -128,7 +132,8 @@ export const products: Product[] = [
     category: 'Fashion',
     tags: ['laptop', 'bag', 'waterproof', 'professional'],
     rating: 4.4,
-    reviews: 156
+    reviews: 156,
+    createdAt: '2024-01-05'
   },
   {
     id: '6',
@@ -140,7 +145,8 @@ export const products: Product[] = [
     category: 'Electronics',
     tags: ['bluetooth', 'speaker', 'portable', 'wireless'],
     rating: 4.3,
-    reviews: 201
+    reviews: 201,
+    createdAt: '2024-01-30'
   },
   {
     id: '7',
@@ -151,7 +157,8 @@ export const products: Product[] = [
     category: 'Home & Garden',
     tags: ['plants', 'succulent', 'ceramic', 'indoor'],
     rating: 4.9,
-    reviews: 94
+    reviews: 94,
+    createdAt: '2024-01-18'
   },
   {
     id: '8',
@@ -162,6 +169,7 @@ export const products: Product[] = [
     category: 'Sports',
     tags: ['running', 'shoes', 'lightweight', 'cushioning'],
     rating: 4.6,
-    reviews: 178
+    reviews: 178,
+    createdAt: '2024-01-12'
   }
 ];
