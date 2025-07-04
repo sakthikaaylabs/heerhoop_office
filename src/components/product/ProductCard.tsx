@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Star, Heart } from 'lucide-react';
+import { Star, Heart, Eye } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
@@ -11,9 +11,10 @@ import CartActions from '@/components/ui/cart-actions';
 
 interface ProductCardProps {
   product: Product;
+  onQuickView?: (product: Product) => void;
 }
 
-const ProductCard = ({ product }: ProductCardProps) => {
+const ProductCard = ({ product, onQuickView }: ProductCardProps) => {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { toast } = useToast();
 
@@ -101,6 +102,11 @@ const ProductCard = ({ product }: ProductCardProps) => {
           <div className="flex items-center justify-center gap-2 mt-auto">
             <QuantitySelector product={product} variant="card" />
             <CartActions product={product} variant="card" />
+            {onQuickView && (
+              <Button size="icon" variant="outline" onClick={() => onQuickView(product)} aria-label="Quick View">
+                <Eye className="h-5 w-5" />
+              </Button>
+            )}
           </div>
         </div>
       </CardContent>

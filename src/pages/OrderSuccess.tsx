@@ -5,6 +5,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { CheckCircle, Package, Truck, Calendar, Download, ArrowRight, Phone, Mail, Home, ShoppingBag } from 'lucide-react';
 import { Order } from '@/types';
+import ReceiptGenerator from '@/components/receipt/ReceiptGenerator';
 
 const OrderSuccess = () => {
   const [isAnimating, setIsAnimating] = useState(true);
@@ -68,7 +69,7 @@ const OrderSuccess = () => {
           </div>
         </div>
 
-        <div className={`grid md:grid-cols-2 gap-8 transition-all duration-1000 delay-1500 ${isAnimating ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}>
+        <div className={`grid md:grid-cols-3 gap-8 transition-all duration-1000 delay-1500 ${isAnimating ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}>
           {/* Order Details */}
           <Card className="card-product">
             <CardContent className="p-6">
@@ -144,6 +145,9 @@ const OrderSuccess = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Receipt Download */}
+          <ReceiptGenerator order={order} />
         </div>
 
         {/* Contact Information */}
