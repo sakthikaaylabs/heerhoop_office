@@ -6,6 +6,7 @@ export interface Product {
   discountPercentage?: number;
   description: string;
   image: string;
+  images?: string[];
   category: string;
   tags: string[];
   featured?: boolean;
@@ -22,6 +23,11 @@ export interface Category {
   id: string;
   name: string;
   image: string;
+  hoverImage?: string;
+  description?: string;
+  productCount?: number;
+  popularTags?: string[];
+  icon?: string;
 }
 
 export interface OrderDetails {

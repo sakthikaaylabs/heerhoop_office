@@ -1,31 +1,21 @@
 import { Link } from 'react-router-dom';
-import { Star, ShoppingCart, Heart } from 'lucide-react';
+import { Star, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent } from '@/components/ui/card';
 import { Product } from '@/types';
-import { useCart } from '@/context/CartContext';
 import { useWishlist } from '@/context/WishlistContext';
 import { useToast } from '@/hooks/use-toast';
+import QuantitySelector from '@/components/ui/quantity-selector';
+import CartActions from '@/components/ui/cart-actions';
 
 interface ProductCardProps {
   product: Product;
 }
 
 const ProductCard = ({ product }: ProductCardProps) => {
-  const { addItem } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const { toast } = useToast();
-
-  const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    addItem(product);
-    toast({
-      title: "Added to cart",
-      description: `${product.name} has been added to your cart.`,
-    });
-  };
 
   const handleWishlistToggle = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -46,14 +36,14 @@ const ProductCard = ({ product }: ProductCardProps) => {
   };
 
   return (
-    <Card className="group card-product hover-lift overflow-hidden">
-      <CardContent className="p-0">
-        <div className="relative">
+    <Card className="group card-product hover-lift overflow-hidden h-full flex flex-col">
+      <CardContent className="p-0 flex flex-col h-full">
+        <div className="relative h-48 flex-shrink-0">
           <Link to={`/product/${product.id}`}>
             <img
               src={product.image}
               alt={product.name}
-              className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             />
           </Link>
           {product.discountPercentage && (
@@ -77,7 +67,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </Button>
         </div>
         
-        <div className="p-4">
+        <div className="p-4 flex flex-col flex-1">
           <div className="mb-2">
             <Badge variant="secondary" className="text-xs">
               {product.category}
@@ -85,7 +75,7 @@ const ProductCard = ({ product }: ProductCardProps) => {
           </div>
           
           <Link to={`/product/${product.id}`}>
-            <h3 className="font-semibold text-lg mb-2 line-clamp-2 hover:text-primary transition-colors">
+            <h3 className="font-semibold text-lg mb-2 line-clamp-3 hover:text-primary transition-colors h-20 flex items-start">
               {product.name}
             </h3>
           </Link>
@@ -108,14 +98,10 @@ const ProductCard = ({ product }: ProductCardProps) => {
             </div>
           )}
           
-          <Button 
-            onClick={handleAddToCart}
-            className="w-full btn-primary"
-            size="sm"
-          >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
+          <div className="flex items-center justify-center gap-2 mt-auto">
+            <QuantitySelector product={product} variant="card" />
+            <CartActions product={product} variant="card" />
+          </div>
         </div>
       </CardContent>
     </Card>

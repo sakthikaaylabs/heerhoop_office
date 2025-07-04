@@ -3,7 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { CheckCircle, Package, Truck, Calendar, Download, ArrowRight } from 'lucide-react';
+import { CheckCircle, Package, Truck, Calendar, Download, ArrowRight, Phone, Mail, Home, ShoppingBag } from 'lucide-react';
 import { Order } from '@/types';
 
 const OrderSuccess = () => {
@@ -46,9 +46,25 @@ const OrderSuccess = () => {
             <p className="text-xl text-muted-foreground mb-2">
               Thank you for your purchase!
             </p>
-            <p className="text-lg text-muted-foreground">
+            <p className="text-lg text-muted-foreground mb-4">
               Order #{order.id}
             </p>
+            
+            {/* Order Confirmation Message */}
+            <div className="max-w-2xl mx-auto bg-white/80 dark:bg-gray-800/80 rounded-lg p-6 shadow-lg">
+              <h2 className="text-2xl font-bold text-center mb-4">We've Received Your Order!</h2>
+              <div className="space-y-3 text-center">
+                <p className="text-lg">
+                  <strong>We will call you</strong> to confirm your order details and delivery arrangements.
+                </p>
+                <p className="text-lg">
+                  <strong>We will let you know</strong> when your order is ready for delivery.
+                </p>
+                <p className="text-muted-foreground">
+                  Please keep your phone handy for our call.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -130,23 +146,47 @@ const OrderSuccess = () => {
           </Card>
         </div>
 
+        {/* Contact Information */}
+        <div className={`text-center mt-8 transition-all duration-1000 delay-2000 ${isAnimating ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}>
+          <Card className="max-w-md mx-auto bg-white/80 dark:bg-gray-800/80">
+            <CardContent className="p-6">
+              <h3 className="text-xl font-bold mb-4">Contact Us for Reference</h3>
+              <div className="space-y-3">
+                <div className="flex items-center justify-center gap-3">
+                  <Phone className="h-5 w-5 text-primary" />
+                  <span className="font-medium">+1 (555) 123-4567</span>
+                </div>
+                <div className="flex items-center justify-center gap-3">
+                  <Mail className="h-5 w-5 text-primary" />
+                  <span className="font-medium">support@heerhoop.com</span>
+                </div>
+                <p className="text-sm text-muted-foreground mt-4">
+                  Feel free to contact us if you have any questions about your order.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
         {/* Action Buttons */}
-        <div className={`text-center mt-12 space-y-4 transition-all duration-1000 delay-2000 ${isAnimating ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}>
+        <div className={`text-center mt-12 space-y-4 transition-all duration-1000 delay-2500 ${isAnimating ? 'opacity-0 translate-y-8' : 'opacity-100 translate-y-0'}`}>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button className="btn-primary" size="lg">
-              <Download className="h-5 w-5 mr-2" />
-              Download Receipt
-            </Button>
+            <Link to="/">
+              <Button className="btn-primary" size="lg">
+                <Home className="h-5 w-5 mr-2" />
+                Go to Home
+              </Button>
+            </Link>
             <Link to="/products">
               <Button variant="outline" size="lg">
-                Continue Shopping
-                <ArrowRight className="h-5 w-5 ml-2" />
+                <ShoppingBag className="h-5 w-5 mr-2" />
+                Go to Products
               </Button>
             </Link>
           </div>
           
           <p className="text-sm text-muted-foreground mt-6">
-            You will receive an email confirmation shortly with tracking information.
+            Thank you for choosing Heer Hoop! We appreciate your business.
           </p>
         </div>
 

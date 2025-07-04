@@ -96,8 +96,11 @@ const Checkout = () => {
         description: `Your order #${order.id} has been placed.`,
       });
 
-      // Navigate to success page or home
-      navigate('/', { replace: true });
+      // Navigate to order success page
+      navigate('/order-success', { 
+        replace: true,
+        state: { order }
+      });
     } catch (error) {
       toast({
         title: "Order Failed",

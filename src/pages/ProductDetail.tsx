@@ -1,13 +1,18 @@
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { useCart } from '@/context/CartContext';
 import { products } from '@/data/mockData';
+import QuantitySelector from '@/components/ui/quantity-selector';
+import ProductImageCarousel from '@/components/product/ProductImageCarousel';
+import CartActions from '@/components/ui/cart-actions';
+import { useWishlist } from '@/context/WishlistContext';
+import { useToast } from '@/hooks/use-toast';
 
 const ProductDetail = () => {
   const { id } = useParams();
-  const { addItem } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  const { toast } = useToast();
   
   const product = products.find(p => p.id === id);
 
@@ -22,8 +27,20 @@ const ProductDetail = () => {
     );
   }
 
-  const handleAddToCart = () => {
-    addItem(product);
+  const handleWishlistToggle = () => {
+    if (isInWishlist(product.id)) {
+      removeFromWishlist(product.id);
+      toast({
+        title: "Removed from wishlist",
+        description: `${product.name} has been removed from your wishlist.`,
+      });
+    } else {
+      addToWishlist(product);
+      toast({
+        title: "Added to wishlist",
+        description: `${product.name} has been added to your wishlist.`,
+      });
+    }
   };
 
   return (
@@ -35,19 +52,13 @@ const ProductDetail = () => {
       </Link>
 
       <div className="grid md:grid-cols-2 gap-12">
-        {/* Product Image */}
-        <div className="relative">
-          <img
-            src={product.image}
-            alt={product.name}
-            className="w-full h-96 md:h-[500px] object-cover rounded-lg shadow-lg"
-          />
-          {product.originalPrice && (
-            <Badge className="absolute top-4 left-4 bg-accent text-accent-foreground">
-              Sale
-            </Badge>
-          )}
-        </div>
+        {/* Product Image Carousel */}
+        <ProductImageCarousel
+          product={product}
+          showWishlistButton={true}
+          onWishlistToggle={handleWishlistToggle}
+          isInWishlist={isInWishlist(product.id)}
+        />
 
         {/* Product Info */}
         <div className="space-y-6">
@@ -101,21 +112,25 @@ const ProductDetail = () => {
           )}
 
           <div className="space-y-4 pt-6">
-            <Button 
-              onClick={handleAddToCart}
-              size="lg" 
-              className="w-full btn-primary text-lg py-3"
-            >
-              Add to Cart - ${product.price}
-            </Button>
+            <QuantitySelector product={product} variant="detail" />
             
             <Button 
               variant="outline" 
               size="lg" 
               className="w-full text-lg py-3"
+              onClick={handleWishlistToggle}
             >
-              Add to Wishlist
+              <Heart 
+                className={`h-5 w-5 mr-2 transition-colors ${
+                  isInWishlist(product.id) 
+                    ? 'text-destructive fill-current' 
+                    : 'text-muted-foreground'
+                }`} 
+              />
+              {isInWishlist(product.id) ? 'Remove from Wishlist' : 'Add to Wishlist'}
             </Button>
+            
+            <CartActions product={product} variant="detail" />
           </div>
 
           <div className="pt-6 border-t">
