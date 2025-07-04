@@ -3,20 +3,47 @@ import { Download, Receipt } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { useToast } from '@/hooks/use-toast';
 
 interface ReceiptGeneratorProps {
   order: Order;
 }
 
 const ReceiptGenerator = ({ order }: ReceiptGeneratorProps) => {
+  const { toast } = useToast();
+
   const generateReceipt = async () => {
     try {
+      console.log('Starting receipt generation for order:', order);
+      
+      // Show loading state
+      toast({
+        title: "Generating receipt...",
+        description: "Please wait while we create your PDF receipt.",
+      });
+
+      // Check if order data is valid
+      if (!order || !order.id) {
+        throw new Error('Invalid order data');
+      }
+
       // Dynamic import to avoid SSR issues
+      console.log('Importing jsPDF...');
       const jsPDF = (await import('jspdf')).default;
+      console.log('Importing html2canvas...');
       const html2canvas = (await import('html2canvas')).default;
+      console.log('Libraries imported successfully');
 
       // Create receipt content
       const receiptContent = document.createElement('div');
+      receiptContent.style.position = 'absolute';
+      receiptContent.style.left = '-9999px';
+      receiptContent.style.top = '0';
+      receiptContent.style.width = '400px';
+      receiptContent.style.backgroundColor = 'white';
+      receiptContent.style.padding = '20px';
+      receiptContent.style.fontFamily = 'Arial, sans-serif';
+      
       receiptContent.innerHTML = `
         <div style="font-family: Arial, sans-serif; padding: 20px; max-width: 400px; background: white;">
           <div style="text-align: center; border-bottom: 2px solid #333; padding-bottom: 20px; margin-bottom: 20px;">
@@ -68,39 +95,67 @@ const ReceiptGenerator = ({ order }: ReceiptGeneratorProps) => {
         </div>
       `;
 
-      // Convert to canvas
-      const canvas = await html2canvas(receiptContent, {
-        scale: 2,
-        useCORS: true,
-        allowTaint: true,
-        backgroundColor: '#ffffff'
-      });
+      console.log('Receipt content created, adding to DOM...');
+      // Add to DOM temporarily
+      document.body.appendChild(receiptContent);
 
-      // Create PDF
-      const imgData = canvas.toDataURL('image/png');
-      const pdf = new jsPDF('p', 'mm', 'a4');
-      const imgWidth = 210;
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      try {
+        console.log('Converting to canvas...');
+        // Convert to canvas
+        const canvas = await html2canvas(receiptContent, {
+          scale: 2,
+          useCORS: true,
+          allowTaint: true,
+          backgroundColor: '#ffffff',
+          width: 400,
+          height: receiptContent.scrollHeight
+        });
 
-      let position = 0;
+        console.log('Canvas created, generating PDF...');
+        // Create PDF
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF('p', 'mm', 'a4');
+        const imgWidth = 210;
+        const pageHeight = 295;
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        let heightLeft = imgHeight;
 
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
+        let position = 0;
 
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
         pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
         heightLeft -= pageHeight;
-      }
 
-      // Download PDF
-      pdf.save(`receipt-${order.id}.pdf`);
+        while (heightLeft >= 0) {
+          position = heightLeft - imgHeight;
+          pdf.addPage();
+          pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+          heightLeft -= pageHeight;
+        }
+
+        console.log('PDF created, downloading...');
+        // Download PDF
+        pdf.save(`receipt-${order.id}.pdf`);
+
+        // Success message
+        toast({
+          title: "Receipt downloaded!",
+          description: `Your receipt has been saved as receipt-${order.id}.pdf`,
+        });
+        
+        console.log('Receipt download completed successfully');
+      } finally {
+        // Clean up
+        if (document.body.contains(receiptContent)) {
+          document.body.removeChild(receiptContent);
+        }
+      }
     } catch (error) {
       console.error('Error generating receipt:', error);
-      alert('Failed to generate receipt. Please try again.');
+      toast({
+        title: "Failed to generate receipt",
+        description: error instanceof Error ? error.message : "Please try again or contact support if the problem persists.",
+        variant: "destructive",
+      });
     }
   };
 
